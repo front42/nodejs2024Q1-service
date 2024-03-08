@@ -4,28 +4,20 @@ import {
   NotFoundException,
   ForbiddenException,
 } from '@nestjs/common';
-import { validate } from 'uuid';
+
+import { User } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import { DatabaseService } from 'src/database/database.service';
-import { User } from './entities/user.entity';
 
 @Injectable()
 export class UsersService {
   constructor(private databaseService: DatabaseService) {}
 
   create(createUserDto: CreateUserDto) {
-    if (
-      this.databaseService.users.find(
-        (user) => user.login === createUserDto.login,
-      )
-    )
-      throw new BadRequestException(
-        `User ${createUserDto.login} already exists in database`,
-      );
-
-    const user = new User(createUserDto.login, createUserDto.password); // можно деструктурировать
-    if (!user.login) throw new BadRequestException(`No required login`);
+    const user = new User(createUserDto.login, createUserDto.password);
+    if (!user.login || !user.password)
+      throw new BadRequestException(`No required login or password`);
     this.databaseService.users.push(user);
     return user.info;
   }
@@ -35,20 +27,12 @@ export class UsersService {
   }
 
   findOne(id: string) {
-    if (!validate(id)) throw new BadRequestException('Not valid id');
-
-    // @Get(':uuid') Есть встроенный
-    // async findOne(@Param('uuid', new ParseUUIDPipe()) uuid: string) {
-    //   return this.catsService.findOne(uuid);
-    // }
-
     const user = this.databaseService.users.find((user) => user.id === id);
     if (!user) throw new NotFoundException('No such user in database');
     return user.info;
   }
 
   update(id: string, updatePasswordDto: UpdatePasswordDto) {
-    if (!validate(id)) throw new BadRequestException('Not valid id');
     if (!updatePasswordDto.oldPassword || !updatePasswordDto.newPassword)
       throw new BadRequestException(`No required passwords`);
     const user = this.databaseService.users.find((user) => user.id === id);
@@ -63,6 +47,12 @@ export class UsersService {
   }
 
   remove(id: string) {
-    return `This action removes a #${id} user`;
+    const user = this.databaseService.users.find((user) => user.id === id);
+    if (!user) throw new NotFoundException('No such user in database');
+    this.databaseService.users.splice(
+      this.databaseService.users.indexOf(user),
+      1,
+    );
+    return user.info;
   }
 }
