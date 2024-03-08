@@ -10,7 +10,7 @@ Use these commands to enjoy, for example:
 - npm **run start** or npm **start** - runs project in production mode
 - npm **run start:dev** - runs project in dev watch mode
 - npm **run build** - builds project in dist folder
-- npm **run test** or npm **test** - runs project tests for API
+- npm **run test** or npm **test** - runs project tests for API in **second** terminal **after** npm **start** command
 
 More commands are below in this **README** and in **package.json** file.
 
