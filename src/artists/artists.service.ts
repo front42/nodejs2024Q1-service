@@ -29,7 +29,7 @@ export class ArtistsService {
     const artist = this.databaseService.artists.find(
       (artist) => artist.id === id,
     );
-    if (!artist) throw new NotFoundException('No such user in database');
+    if (!artist) throw new NotFoundException('No such artist in database');
     return artist.info;
   }
 
