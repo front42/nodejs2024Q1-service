@@ -53,6 +53,12 @@ export class AlbumsService {
   remove(id: string) {
     const album = this.databaseService.albums.find((album) => album.id === id);
     if (!album) throw new NotFoundException('No such album in database');
+
+    const albumTracks = this.databaseService.tracks.filter(
+      (track) => track.albumId === id,
+    );
+    albumTracks.forEach((track) => (track.albumId = null));
+
     this.databaseService.albums.splice(
       this.databaseService.albums.indexOf(album),
       1,
