@@ -50,6 +50,17 @@ export class ArtistsService {
       (artist) => artist.id === id,
     );
     if (!artist) throw new NotFoundException('No such artist in database');
+
+    const artistAlbums = this.databaseService.albums.filter(
+      (album) => album.artistId === id,
+    );
+    artistAlbums.forEach((album) => (album.artistId = null));
+
+    const artistTracks = this.databaseService.tracks.filter(
+      (track) => track.artistId === id,
+    );
+    artistTracks.forEach((track) => (track.artistId = null));
+
     this.databaseService.artists.splice(
       this.databaseService.artists.indexOf(artist),
       1,
