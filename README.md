@@ -14,7 +14,7 @@ Use these commands to enjoy, for example:
 
 More commands are below in this **README** and in **package.json** file.
 
-If there's some **ESLint** parsing error: cannot read file in import - try to swap comments in **.eslintrc.js** file.
+If you have **ESLint** parsing error: cannot read file in import - swap two indicated **comments** in **.eslintrc.js** file.
 
 Server starts on **http://localhost:4000/**
 

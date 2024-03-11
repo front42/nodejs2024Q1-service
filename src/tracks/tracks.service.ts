@@ -51,10 +51,10 @@ export class TracksService {
   remove(id: string) {
     const track = this.databaseService.tracks.find((track) => track.id === id);
     if (!track) throw new NotFoundException('No such track in database');
-    this.databaseService.tracks.splice(
-      this.databaseService.tracks.indexOf(track),
-      1,
+    this.databaseService.favorites.tracks =
+      this.databaseService.favorites.tracks.filter((trackId) => trackId !== id);
+    this.databaseService.tracks = this.databaseService.tracks.filter(
+      (track) => track.id !== id,
     );
-    return track.info;
   }
 }

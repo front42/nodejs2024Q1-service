@@ -50,21 +50,20 @@ export class ArtistsService {
       (artist) => artist.id === id,
     );
     if (!artist) throw new NotFoundException('No such artist in database');
-
     const artistAlbums = this.databaseService.albums.filter(
       (album) => album.artistId === id,
     );
     artistAlbums.forEach((album) => (album.artistId = null));
-
     const artistTracks = this.databaseService.tracks.filter(
       (track) => track.artistId === id,
     );
     artistTracks.forEach((track) => (track.artistId = null));
-
-    this.databaseService.artists.splice(
-      this.databaseService.artists.indexOf(artist),
-      1,
+    this.databaseService.favorites.artists =
+      this.databaseService.favorites.artists.filter(
+        (artistId) => artistId !== id,
+      );
+    this.databaseService.artists = this.databaseService.artists.filter(
+      (artist) => artist.id !== id,
     );
-    return artist.info;
   }
 }
