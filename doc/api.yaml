@@ -760,78 +760,6 @@ paths:
                 $ref: '#/components/schemas/Favorites'
         401:
           $ref: '#/components/responses/UnauthorizedError'
-  /favs/track/{id}:
-    parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: string
-          format: uuid
-    post:
-      tags:
-        - Favorites
-      summary: Add track to the favorites
-      description: Add track to the favorites
-      responses:
-        201:
-          description: Added successfully
-        400:
-          description: Bad request. trackId is invalid (not uuid)
-        401:
-          $ref: '#/components/responses/UnauthorizedError'
-        422:
-          description: Track with id doesn't exist
-    delete:
-      tags:
-        - Favorites
-      summary: Delete track from favorites
-      description: Delete track from favorites
-      responses:
-        204:
-          description: Deleted successfully
-        400:
-          description: Bad request. trackId is invalid (not uuid)
-        401:
-          $ref: '#/components/responses/UnauthorizedError'
-        404:
-          description: Track was not found
-  /favs/album/{id}:
-    parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: string
-          format: uuid
-    post:
-      tags:
-        - Favorites
-      summary: Add album to the favorites
-      description: Add album to the favorites
-      responses:
-        201:
-          description: Added successfully
-        400:
-          description: Bad request. albumId is invalid (not uuid)
-        401:
-          $ref: '#/components/responses/UnauthorizedError'
-        422:
-          description: Album with id doesn't exist
-    delete:
-      tags:
-        - Favorites
-      summary: Delete album from favorites
-      description: Delete album from favorites
-      responses:
-        204:
-          description: Deleted successfully
-        400:
-          description: Bad request. albumId is invalid (not uuid)
-        401:
-          $ref: '#/components/responses/UnauthorizedError'
-        404:
-          description: Album was not found
   /favs/artist/{id}:
     parameters:
       - name: id
@@ -868,3 +796,75 @@ paths:
           $ref: '#/components/responses/UnauthorizedError'
         404:
           description: Artist was not found
+  /favs/album/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    post:
+      tags:
+        - Favorites
+      summary: Add album to the favorites
+      description: Add album to the favorites
+      responses:
+        201:
+          description: Added successfully
+        400:
+          description: Bad request. albumId is invalid (not uuid)
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        422:
+          description: Album with id doesn't exist
+    delete:
+      tags:
+        - Favorites
+      summary: Delete album from favorites
+      description: Delete album from favorites
+      responses:
+        204:
+          description: Deleted successfully
+        400:
+          description: Bad request. albumId is invalid (not uuid)
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        404:
+          description: Album was not found
+  /favs/track/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    post:
+      tags:
+        - Favorites
+      summary: Add track to the favorites
+      description: Add track to the favorites
+      responses:
+        201:
+          description: Added successfully
+        400:
+          description: Bad request. trackId is invalid (not uuid)
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        422:
+          description: Track with id doesn't exist
+    delete:
+      tags:
+        - Favorites
+      summary: Delete track from favorites
+      description: Delete track from favorites
+      responses:
+        204:
+          description: Deleted successfully
+        400:
+          description: Bad request. trackId is invalid (not uuid)
+        401:
+          $ref: '#/components/responses/UnauthorizedError'
+        404:
+          description: Track was not found
