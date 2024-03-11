@@ -75,7 +75,7 @@ export class FavoritesService {
           );
           return artistId;
         } else {
-          throw new NotFoundException(`No such artist in database`);
+          throw new NotFoundException(`No such artist in favorites`);
         }
       case 'album':
         const albumId = this.databaseService.favorites.albums.find(
@@ -88,7 +88,7 @@ export class FavoritesService {
           );
           return albumId;
         } else {
-          throw new UnprocessableEntityException(`No such album in database`);
+          throw new NotFoundException(`No such album in favorites`);
         }
       case 'track':
         const trackId = this.databaseService.favorites.tracks.find(
@@ -101,7 +101,7 @@ export class FavoritesService {
           );
           return trackId;
         } else {
-          throw new UnprocessableEntityException(`No such track in database`);
+          throw new NotFoundException(`No such track in favorites`);
         }
       default:
         throw new BadRequestException(`No such route`);

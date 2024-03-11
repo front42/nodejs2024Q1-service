@@ -5,16 +5,16 @@ Made with NestJS.
 <img src="https://rolling-scopes-school.github.io/front42-JSFE2021Q1/presentation/z/front42.jpg" alt="logo" height="23"/>  
 Clone this repository - for example with SSH: **git clone** git@github.com:front42/nodejs2024Q1-service.git  
 Go to project directory, switch git checkout **develop-rest** and install dependencies - **npm i**  
-Make copy of **.env.example** file and rename it to **.env**  
+If needed, make copy of **.env.example** file and rename it to **.env**  
 Use these commands to enjoy, for example:
 - npm **run start** or npm **start** - runs project in production mode
 - npm **run start:dev** - runs project in dev watch mode
 - npm **run build** - builds project in dist folder
 - npm **run test** or npm **test** - runs project tests for API in **second** terminal **after** npm **start** command
 
-More commands are below in this **README** and in **package.json** file.
+More commands are below in this **README** and in **package.json** file, also you can try them in **swagger** http://localhost:4000/doc/
 
-If you have **ESLint** parsing error: cannot read file in import - swap two indicated **comments** in **.eslintrc.js** file.
+If you have **ESLint** parsing error: cannot read file in import - swap two indicated **comments** in **.eslintrc.js** file
 
 Server starts on **http://localhost:4000/**
 
