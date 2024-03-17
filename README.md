@@ -14,7 +14,8 @@ Use these commands to enjoy, for example:
 
 More commands are below in this **README** and in **package.json** file, also you can try them in **swagger** http://localhost:4000/doc/
 
-If you have **ESLint** parsing error: cannot read file in import - swap two indicated **comments** in **.eslintrc.js** file
+If you have **ESLint** parsing error: cannot read file tsconfig.json - swap two indicated **comments** in **.eslintrc.js** file  
+or add there tsconfigRootDir: __dirname (working with original path or other - and also by itself without them)
 
 Server starts on **http://localhost:4000/**
 
