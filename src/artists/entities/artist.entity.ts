@@ -1,7 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
-import { IArtist } from 'src/models';
 
-export class Artist implements IArtist {
+export class Artist {
   public id = uuidv4();
 
   constructor(public name: string, public grammy: boolean) {}

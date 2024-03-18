@@ -55,7 +55,7 @@ export class ArtistsService {
       where: { id },
     });
     if (!artist) throw new NotFoundException('No such artist in database');
-    return this.databasePrismaService.artist.delete({ where: { id } });
+    return await this.databasePrismaService.artist.delete({ where: { id } });
   }
   //   const artist = this.databasePrismaService.artists.find(
   //     (artist) => artist.id === id,

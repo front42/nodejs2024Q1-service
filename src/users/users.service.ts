@@ -71,6 +71,6 @@ export class UsersService {
       where: { id },
     });
     if (!user) throw new NotFoundException('No such user in database');
-    return this.databasePrismaService.user.delete({ where: { id } });
+    return await this.databasePrismaService.user.delete({ where: { id } });
   }
 }
