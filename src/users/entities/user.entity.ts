@@ -1,7 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
-import { IUser } from 'src/models';
 
-export class User implements IUser {
+export class User {
   public id = uuidv4();
   public version = 1;
   public createdAt = Date.now();
@@ -9,13 +8,13 @@ export class User implements IUser {
 
   constructor(public login: string, public password: string) {}
 
-  get info() {
-    return {
-      id: this.id,
-      login: this.login,
-      version: this.version,
-      createdAt: this.createdAt,
-      updatedAt: this.updatedAt,
-    };
-  }
+  // get info() {
+  //   return {
+  //     id: this.id,
+  //     login: this.login,
+  //     version: this.version,
+  //     createdAt: this.createdAt,
+  //     updatedAt: this.updatedAt,
+  //   };
+  // }
 }

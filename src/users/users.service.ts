@@ -5,54 +5,72 @@ import {
   ForbiddenException,
 } from '@nestjs/common';
 
-import { User } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
-import { DatabaseService } from 'src/database/database.service';
+import { DatabasePrismaService } from 'src/database-prisma/database-prisma.service';
 
 @Injectable()
 export class UsersService {
-  constructor(private databaseService: DatabaseService) {}
+  constructor(private databasePrismaService: DatabasePrismaService) {}
 
-  create(createUserDto: CreateUserDto) {
-    const user = new User(createUserDto.login, createUserDto.password);
-    if (!user.login || !user.password)
+  private getUserInfo = (user) => {
+    const { password, createdAt, updatedAt, ...rest } = user;
+    return {
+      ...rest,
+      createdAt: createdAt.getTime(),
+      updatedAt: updatedAt.getTime(),
+    };
+  };
+
+  async create(createUserDto: CreateUserDto) {
+    if (!createUserDto.login || !createUserDto.password) {
       throw new BadRequestException(`No required login or password`);
-    this.databaseService.users.push(user);
-    return user.info;
+    }
+    const user = await this.databasePrismaService.user.create({
+      data: createUserDto,
+    });
+    return this.getUserInfo(user);
   }
 
-  findAll() {
-    return this.databaseService.users.map((user: User) => user.info);
+  async findAll() {
+    const users = await this.databasePrismaService.user.findMany();
+    return users.map((user) => this.getUserInfo(user));
   }
 
-  findOne(id: string) {
-    const user = this.databaseService.users.find((user) => user.id === id);
+  async findOne(id: string) {
+    const user = await this.databasePrismaService.user.findUnique({
+      where: { id },
+    });
     if (!user) throw new NotFoundException('No such user in database');
-    return user.info;
+    return this.getUserInfo(user);
   }
 
-  update(id: string, updatePasswordDto: UpdatePasswordDto) {
+  async update(id: string, updatePasswordDto: UpdatePasswordDto) {
     if (!updatePasswordDto.oldPassword || !updatePasswordDto.newPassword)
       throw new BadRequestException(`No required passwords`);
-    const user = this.databaseService.users.find((user) => user.id === id);
+    let user = await this.databasePrismaService.user.findUnique({
+      where: { id },
+    });
     if (!user) throw new NotFoundException('No such user in database');
     if (user.password !== updatePasswordDto.oldPassword) {
       throw new ForbiddenException('Wrong old password');
     }
-    user.password = updatePasswordDto.newPassword;
-    user.version++;
-    user.updatedAt = Date.now();
-    return user.info;
+    user = await this.databasePrismaService.user.update({
+      where: { id },
+      data: {
+        password: updatePasswordDto.newPassword,
+        version: ++user.version,
+        updatedAt: new Date(),
+      },
+    });
+    return this.getUserInfo(user);
   }
 
-  remove(id: string) {
-    const user = this.databaseService.users.find((user) => user.id === id);
+  async remove(id: string) {
+    const user = await this.databasePrismaService.user.findUnique({
+      where: { id },
+    });
     if (!user) throw new NotFoundException('No such user in database');
-    this.databaseService.users.splice(
-      this.databaseService.users.indexOf(user),
-      1,
-    );
-    return user.info;
+    return this.databasePrismaService.user.delete({ where: { id } });
   }
 }
