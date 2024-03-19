@@ -1,7 +1,9 @@
 module.exports = {
   parser: '@typescript-eslint/parser',
   parserOptions: {
-    project: 'tsconfig.json',
+    project: 'tsconfig.json', // original path, try swap this & another path in case ESLint Parsing error: Cannot read file tsconfig.json
+    // project: '**/tsconfig.json', // another fix ESLint Parsing error: Cannot read file tsconfig.json - without tsconfigRootDir: __dirname
+    tsconfigRootDir: __dirname, // working with original path above or other - and also by itself without them
     sourceType: 'module',
   },
   plugins: ['@typescript-eslint/eslint-plugin'],
