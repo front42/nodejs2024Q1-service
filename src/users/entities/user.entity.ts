@@ -7,14 +7,4 @@ export class User {
   public updatedAt = this.createdAt;
 
   constructor(public login: string, public password: string) {}
-
-  // get info() {
-  //   return {
-  //     id: this.id,
-  //     login: this.login,
-  //     version: this.version,
-  //     createdAt: this.createdAt,
-  //     updatedAt: this.updatedAt,
-  //   };
-  // }
 }

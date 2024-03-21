@@ -14,7 +14,7 @@ export class TracksService {
 
   async create(createTrackDto: CreateTrackDto) {
     if (!createTrackDto.name || typeof createTrackDto.duration !== 'number')
-      throw new BadRequestException(`No required name or duration`);
+      throw new BadRequestException('No required name or duration');
     return await this.databasePrismaService.track.create({
       data: createTrackDto,
     });
@@ -34,7 +34,7 @@ export class TracksService {
 
   async update(id: string, updateTrackDto: UpdateTrackDto) {
     if (!updateTrackDto.name || typeof updateTrackDto.duration !== 'number')
-      throw new BadRequestException(`No required name or duration`);
+      throw new BadRequestException('No required name or duration');
     let track = await this.databasePrismaService.track.findUnique({
       where: { id },
     });
@@ -57,10 +57,5 @@ export class TracksService {
     });
     if (!track) throw new NotFoundException('No such track in database');
     return await this.databasePrismaService.track.delete({ where: { id } });
-    // this.databasePrismaService.favorites.tracks =
-    //   this.databasePrismaService.favorites.tracks.filter((trackId) => trackId !== id);
-    // this.databasePrismaService.tracks = this.databasePrismaService.tracks.filter(
-    //   (track) => track.id !== id,
-    // );
   }
 }

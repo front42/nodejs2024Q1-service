@@ -9,14 +9,4 @@ export class Track {
     public albumId: string,
     public duration: number,
   ) {}
-
-  // get info() {
-  //   return {
-  //     id: this.id,
-  //     name: this.name,
-  //     artistId: this.artistId,
-  //     albumId: this.albumId,
-  //     duration: this.duration,
-  //   };
-  // }
 }

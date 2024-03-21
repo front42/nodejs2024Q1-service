@@ -14,7 +14,7 @@ export class ArtistsService {
 
   async create(createArtistDto: CreateArtistDto) {
     if (!createArtistDto.name || typeof createArtistDto.grammy !== 'boolean') {
-      throw new BadRequestException(`No required name or grammy`);
+      throw new BadRequestException('No required name or grammy');
     }
     return await this.databasePrismaService.artist.create({
       data: createArtistDto,
@@ -35,7 +35,7 @@ export class ArtistsService {
 
   async update(id: string, updateArtistDto: UpdateArtistDto) {
     if (!updateArtistDto.name || typeof updateArtistDto.grammy !== 'boolean')
-      throw new BadRequestException(`No required name or grammy`);
+      throw new BadRequestException('No required name or grammy');
     let artist = await this.databasePrismaService.artist.findUnique({
       where: { id },
     });
@@ -57,23 +57,4 @@ export class ArtistsService {
     if (!artist) throw new NotFoundException('No such artist in database');
     return await this.databasePrismaService.artist.delete({ where: { id } });
   }
-  //   const artist = this.databasePrismaService.artists.find(
-  //     (artist) => artist.id === id,
-  //   );
-  //   if (!artist) throw new NotFoundException('No such artist in database');
-  //   const artistAlbums = this.databasePrismaService.albums.filter(
-  //     (album) => album.artistId === id,
-  //   );
-  //   artistAlbums.forEach((album) => (album.artistId = null));
-  //   const artistTracks = this.databasePrismaService.tracks.filter(
-  //     (track) => track.artistId === id,
-  //   );
-  //   artistTracks.forEach((track) => (track.artistId = null));
-  //   this.databasePrismaService.favorites.artists =
-  //     this.databasePrismaService.favorites.artists.filter(
-  //       (artistId) => artistId !== id,
-  //     );
-  //   this.databasePrismaService.artists =
-  //     this.databasePrismaService.artists.filter((artist) => artist.id !== id);
-  // }
 }

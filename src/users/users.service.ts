@@ -24,7 +24,7 @@ export class UsersService {
 
   async create(createUserDto: CreateUserDto) {
     if (!createUserDto.login || !createUserDto.password) {
-      throw new BadRequestException(`No required login or password`);
+      throw new BadRequestException('No required login or password');
     }
     const user = await this.databasePrismaService.user.create({
       data: createUserDto,
@@ -47,7 +47,7 @@ export class UsersService {
 
   async update(id: string, updatePasswordDto: UpdatePasswordDto) {
     if (!updatePasswordDto.oldPassword || !updatePasswordDto.newPassword)
-      throw new BadRequestException(`No required passwords`);
+      throw new BadRequestException('No required passwords');
     let user = await this.databasePrismaService.user.findUnique({
       where: { id },
     });

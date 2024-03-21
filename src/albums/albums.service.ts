@@ -18,7 +18,7 @@ export class AlbumsService {
       typeof createAlbumDto.name !== 'string' ||
       typeof createAlbumDto.year !== 'number'
     )
-      throw new BadRequestException(`No required name, year or artist id`);
+      throw new BadRequestException('No required name, year or artist id');
     return await this.databasePrismaService.album.create({
       data: createAlbumDto,
     });
@@ -38,7 +38,7 @@ export class AlbumsService {
 
   async update(id: string, updateAlbumDto: UpdateAlbumDto) {
     if (!updateAlbumDto.name || typeof updateAlbumDto.year !== 'number')
-      throw new BadRequestException(`No required name or year`);
+      throw new BadRequestException('No required name or year');
     let album = await this.databasePrismaService.album.findUnique({
       where: { id },
     });
@@ -60,14 +60,5 @@ export class AlbumsService {
     });
     if (!album) throw new NotFoundException('No such album in database');
     return await this.databasePrismaService.album.delete({ where: { id } });
-    // const albumTracks = this.databasePrismaService.tracks.filter(
-    //   (track) => track.albumId === id,
-    // );
-    // albumTracks.forEach((track) => (track.albumId = null));
-    // this.databasePrismaService.favorites.albums =
-    //   this.databasePrismaService.favorites.albums.filter((albumId) => albumId !== id);
-    // this.databasePrismaService.albums = this.databasePrismaService.albums.filter(
-    //   (album) => album.id !== id,
-    // );
   }
 }

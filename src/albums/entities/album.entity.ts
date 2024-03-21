@@ -8,13 +8,4 @@ export class Album {
     public year: number,
     public artistId: string | null,
   ) {}
-
-  // get info() {
-  //   return {
-  //     id: this.id,
-  //     name: this.name,
-  //     year: this.year,
-  //     artistId: this.artistId,
-  //   };
-  // }
 }
