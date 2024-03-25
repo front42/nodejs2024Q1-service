@@ -6,14 +6,18 @@ Made with NestJS.
 Clone this repository - for example with SSH: **git clone** git@github.com:front42/nodejs2024Q1-service.git  
 Go to project directory, switch git checkout **develop-docker-postgresql-prisma** and install dependencies - **npm i**  
 If needed, make copy of **.env.example** file and rename it to **.env**  
-Use these commands to enjoy, for example:
-- npm **run start** or npm **start** - runs project in production mode
-- npm **run start:dev** - runs project in dev watch mode
-- npm **run build** - builds project in dist folder
-- npm **run test** or npm **test** - runs project tests for API in **second** terminal **after** npm **start** command
+Run **Docker** and use these commands to enjoy, for example:
+- npm run **docker:build** - runs project in dev watch mode (this takes a lot of time - use all your patience)
+- npm run **docker:up** - when project is built runs it fast in dev watch mode
+- npm run **docker:stop** - stops project saving its container
+- npm run **docker:down** - stops project removштп its container
+- npm run **test** or npm **test** - runs project tests for API in **second** terminal **after** server start
+- npm run **docker:scan-app** - scans app image for vulnerabilities
+- npm run **docker:scan-postgres** - scans database image for vulnerabilities
 
 More commands are in **package.json** file, also you can try them in **swagger** http://localhost:4000/doc/  
-Server starts on **http://localhost:4000/**  
+Server starts on http://localhost:4000/  
+Images also can be pulled from Docker Hub: https://hub.docker.com/repositories/front42
 
 If you have **ESLint** parsing error: cannot read file tsconfig.json - swap two indicated **comments** in **.eslintrc.js** file  
 or use there **tsconfigRootDir: __dirname** (working with original path or other - and also by itself without them)

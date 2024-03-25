@@ -19,7 +19,14 @@
     "test:refresh": "cross-env TEST_MODE=auth jest --testPathPattern refresh.e2e.spec.ts --noStackTrace --runInBand",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
-    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand"
+    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
+    "start:dev:migrate": "npx prisma migrate deploy && npx prisma generate && nest start --watch",
+    "docker:build": "docker-compose up --build",
+    "docker:up": "docker-compose up",
+    "docker:stop": "docker-compose stop",
+    "docker:down": "docker-compose down",
+    "docker:scan-app": "docker scout cves local://front42/nodejs2024q1-service-app",
+    "docker:scan-postgres": "docker scout cves local://front42/nodejs2024q1-service-postgres"
   },
   "dependencies": {
     "@nestjs/common": "^8.0.0",
