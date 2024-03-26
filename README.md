@@ -10,7 +10,7 @@ Run **Docker** and use these commands to enjoy, for example:
 - npm run **docker:build** - runs project in dev watch mode (this takes a lot of time - use all your patience)
 - npm run **docker:up** - when project is built runs it fast in dev watch mode
 - npm run **docker:stop** - stops project saving its container
-- npm run **docker:down** - stops project removштп its container
+- npm run **docker:down** - stops project removing its container
 - npm run **test** or npm **test** - runs project tests for API in **second** terminal **after** server start
 - npm run **docker:scan-app** - scans app image for vulnerabilities
 - npm run **docker:scan-postgres** - scans database image for vulnerabilities
