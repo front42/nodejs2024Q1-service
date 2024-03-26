@@ -1,0 +1,51 @@
+version: '3.9'
+
+services:
+  app:
+    image: front42/nodejs2024q1-service-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      postgres:
+        condition: service_started
+    networks:
+      - library-network
+    restart: always
+    env_file:
+      - .env
+    environment:
+      - PORT=${PORT}
+      - DATABASE_URL=${DATABASE_URL}
+    ports:
+      - ${PORT}:${PORT}
+    volumes:
+      - /usr/src/app/node_modules
+      - ./src:/usr/src/app/src
+  postgres:
+    image: front42/nodejs2024q1-service-postgres
+    build:
+      context: ./src/database-prisma
+      dockerfile: Dockerfile
+    networks:
+      - library-network
+    environment:
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_HOST=${DB_HOST}
+      - POSTGRES_PORT=${DB_PORT}
+    ports:
+      - ${DB_PORT}:${DB_PORT}
+    healthcheck:
+      test: [ 'CMD-SHELL', 'pg_isready -U ${DB_USER} -d ${DB_NAME}' ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: always
+    volumes:
+      - ./postgresql-data-volume/:/var/lib/postgresql/data/
+networks:
+  library-network:
+    driver: bridge

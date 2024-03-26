@@ -4,57 +4,58 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 
-import { Track } from './entities/track.entity';
 import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
-import { DatabaseService } from 'src/database/database.service';
+import { DatabasePrismaService } from 'src/database-prisma/database-prisma.service';
 
 @Injectable()
 export class TracksService {
-  constructor(private databaseService: DatabaseService) {}
+  constructor(private databasePrismaService: DatabasePrismaService) {}
 
-  create(createTrackDto: CreateTrackDto) {
-    const track = new Track(
-      createTrackDto.name,
-      createTrackDto.artistId,
-      createTrackDto.albumId,
-      createTrackDto.duration,
-    );
-    if (!track.name || typeof track.duration !== 'number')
-      throw new BadRequestException(`No required name or duration`);
-    this.databaseService.tracks.push(track);
-    return track.info;
+  async create(createTrackDto: CreateTrackDto) {
+    if (!createTrackDto.name || typeof createTrackDto.duration !== 'number')
+      throw new BadRequestException('No required name or duration');
+    return await this.databasePrismaService.track.create({
+      data: createTrackDto,
+    });
   }
 
-  findAll() {
-    return this.databaseService.tracks.map((track: Track) => track.info);
+  async findAll() {
+    return await this.databasePrismaService.track.findMany();
   }
 
-  findOne(id: string) {
-    const track = this.databaseService.tracks.find((track) => track.id === id);
+  async findOne(id: string) {
+    const track = await this.databasePrismaService.track.findUnique({
+      where: { id },
+    });
     if (!track) throw new NotFoundException('No such track in database');
-    return track.info;
+    return track;
   }
 
-  update(id: string, updateTrackDto: UpdateTrackDto) {
+  async update(id: string, updateTrackDto: UpdateTrackDto) {
     if (!updateTrackDto.name || typeof updateTrackDto.duration !== 'number')
-      throw new BadRequestException(`No required name or duration`);
-    const track = this.databaseService.tracks.find((track) => track.id === id);
+      throw new BadRequestException('No required name or duration');
+    let track = await this.databasePrismaService.track.findUnique({
+      where: { id },
+    });
     if (!track) throw new NotFoundException('No such track in database');
-    track.name = updateTrackDto.name;
-    track.artistId = updateTrackDto.artistId;
-    track.albumId = updateTrackDto.albumId;
-    track.duration = updateTrackDto.duration;
-    return track.info;
+    track = await this.databasePrismaService.track.update({
+      where: { id },
+      data: {
+        name: updateTrackDto.name,
+        artistId: updateTrackDto.artistId,
+        albumId: updateTrackDto.albumId,
+        duration: updateTrackDto.duration,
+      },
+    });
+    return track;
   }
 
-  remove(id: string) {
-    const track = this.databaseService.tracks.find((track) => track.id === id);
+  async remove(id: string) {
+    const track = await this.databasePrismaService.track.findUnique({
+      where: { id },
+    });
     if (!track) throw new NotFoundException('No such track in database');
-    this.databaseService.favorites.tracks =
-      this.databaseService.favorites.tracks.filter((trackId) => trackId !== id);
-    this.databaseService.tracks = this.databaseService.tracks.filter(
-      (track) => track.id !== id,
-    );
+    return await this.databasePrismaService.track.delete({ where: { id } });
   }
 }

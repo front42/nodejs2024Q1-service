@@ -4,63 +4,61 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 
-import { Album } from './entities/album.entity';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
-import { DatabaseService } from 'src/database/database.service';
+import { DatabasePrismaService } from 'src/database-prisma/database-prisma.service';
 
 @Injectable()
 export class AlbumsService {
-  constructor(private databaseService: DatabaseService) {}
+  constructor(private databasePrismaService: DatabasePrismaService) {}
 
-  create(createAlbumDto: CreateAlbumDto) {
-    const album = new Album(
-      createAlbumDto.name,
-      createAlbumDto.year,
-      createAlbumDto.artistId,
-    );
+  async create(createAlbumDto: CreateAlbumDto) {
     if (
-      !album.name ||
-      typeof album.name !== 'string' ||
-      typeof album.year !== 'number'
+      !createAlbumDto.name ||
+      typeof createAlbumDto.name !== 'string' ||
+      typeof createAlbumDto.year !== 'number'
     )
-      throw new BadRequestException(`No required name, year or artist id`);
-    this.databaseService.albums.push(album);
-    return album.info;
+      throw new BadRequestException('No required name, year or artist id');
+    return await this.databasePrismaService.album.create({
+      data: createAlbumDto,
+    });
   }
 
-  findAll() {
-    return this.databaseService.albums.map((album: Album) => album.info);
+  async findAll() {
+    return await this.databasePrismaService.album.findMany();
   }
 
-  findOne(id: string) {
-    const album = this.databaseService.albums.find((album) => album.id === id);
+  async findOne(id: string) {
+    const album = await this.databasePrismaService.album.findUnique({
+      where: { id },
+    });
     if (!album) throw new NotFoundException('No such album in database');
-    return album.info;
+    return album;
   }
 
-  update(id: string, updateAlbumDto: UpdateAlbumDto) {
+  async update(id: string, updateAlbumDto: UpdateAlbumDto) {
     if (!updateAlbumDto.name || typeof updateAlbumDto.year !== 'number')
-      throw new BadRequestException(`No required name or year`);
-    const album = this.databaseService.albums.find((album) => album.id === id);
+      throw new BadRequestException('No required name or year');
+    let album = await this.databasePrismaService.album.findUnique({
+      where: { id },
+    });
     if (!album) throw new NotFoundException('No such album in database');
-    album.name = updateAlbumDto.name;
-    album.year = updateAlbumDto.year;
-    album.artistId = updateAlbumDto.artistId;
-    return album.info;
+    album = await this.databasePrismaService.album.update({
+      where: { id },
+      data: {
+        name: updateAlbumDto.name,
+        year: updateAlbumDto.year,
+        artistId: updateAlbumDto.artistId,
+      },
+    });
+    return album;
   }
 
-  remove(id: string) {
-    const album = this.databaseService.albums.find((album) => album.id === id);
+  async remove(id: string) {
+    const album = await this.databasePrismaService.album.findUnique({
+      where: { id },
+    });
     if (!album) throw new NotFoundException('No such album in database');
-    const albumTracks = this.databaseService.tracks.filter(
-      (track) => track.albumId === id,
-    );
-    albumTracks.forEach((track) => (track.albumId = null));
-    this.databaseService.favorites.albums =
-      this.databaseService.favorites.albums.filter((albumId) => albumId !== id);
-    this.databaseService.albums = this.databaseService.albums.filter(
-      (album) => album.id !== id,
-    );
+    return await this.databasePrismaService.album.delete({ where: { id } });
   }
 }
