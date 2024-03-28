@@ -11,7 +11,7 @@ services:
         condition: service_started
     networks:
       - library-network
-    restart: always
+    restart: unless-stopped
     env_file:
       - .env
     environment:
@@ -20,8 +20,7 @@ services:
     ports:
       - ${PORT}:${PORT}
     volumes:
-      - /usr/src/app/node_modules
-      - ./src:/usr/src/app/src
+      - ./src:/app/src
   postgres:
     image: front42/nodejs2024q1-service-postgres
     build:
@@ -43,7 +42,7 @@ services:
       timeout: 5s
       retries: 5
       start_period: 10s
-    restart: always
+    restart: unless-stopped
     volumes:
       - ./postgresql-data-volume/:/var/lib/postgresql/data/
 networks:
