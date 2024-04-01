@@ -2,7 +2,6 @@ node_modules
 dist
 Dockerfile
 docker-compose.yml
-postgresql-data-volume
 .eslintrc.js
 .git
 .gitignore
