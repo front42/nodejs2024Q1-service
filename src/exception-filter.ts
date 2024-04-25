@@ -23,15 +23,21 @@ export class AllExceptionsFilter implements ExceptionFilter {
         ? exception.getStatus()
         : HttpStatus.INTERNAL_SERVER_ERROR;
 
+    const exceptionMessage =
+      exception instanceof HttpException
+        ? exception.message
+        : 'Internal server error';
+
     const responseBody = {
       statusCode: httpStatus,
+      message: exceptionMessage,
       path: httpAdapter.getRequestUrl(ctx.getRequest()),
       timestamp: new Date().toISOString(),
     };
 
     httpAdapter.reply(ctx.getResponse(), responseBody, httpStatus);
     console.log(
-      `Status ${responseBody.statusCode} in request to ${responseBody.path} at ${responseBody.timestamp}`,
+      `Status ${responseBody.statusCode} ${exceptionMessage} in request to ${responseBody.path} at ${responseBody.timestamp}`,
     );
     console.log(
       '\x1b[34m%s\x1b[0m',
