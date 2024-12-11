@@ -23,7 +23,12 @@ export class UsersService {
   };
 
   async create(createUserDto: CreateUserDto) {
-    if (!createUserDto.login || !createUserDto.password) {
+    if (
+      !createUserDto.login ||
+      typeof createUserDto.login !== 'string' ||
+      !createUserDto.password ||
+      typeof createUserDto.password !== 'string'
+    ) {
       throw new BadRequestException('No required login or password');
     }
     const user = await this.databasePrismaService.user.create({
@@ -33,6 +38,7 @@ export class UsersService {
   }
 
   async findAll() {
+    // throw new Error('Test for 500 Internal server error'); // Comment this before run tests
     const users = await this.databasePrismaService.user.findMany();
     return users.map((user) => this.getUserInfo(user));
   }
@@ -72,5 +78,13 @@ export class UsersService {
     });
     if (!user) throw new NotFoundException('No such user in database');
     return await this.databasePrismaService.user.delete({ where: { id } });
+  }
+
+  async getUserByLogin(login: string) {
+    const user = await this.databasePrismaService.user.findFirst({
+      where: { login },
+    });
+    if (!user) throw new NotFoundException('No such user in database');
+    return user;
   }
 }
