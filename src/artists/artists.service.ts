@@ -4,66 +4,57 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 
-import { Artist } from './entities/artist.entity';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
-import { DatabaseService } from 'src/database/database.service';
+import { DatabasePrismaService } from 'src/database-prisma/database-prisma.service';
 
 @Injectable()
 export class ArtistsService {
-  constructor(private databaseService: DatabaseService) {}
+  constructor(private databasePrismaService: DatabasePrismaService) {}
 
-  create(createArtistDto: CreateArtistDto) {
-    const artist = new Artist(createArtistDto.name, createArtistDto.grammy);
-    if (!artist.name || typeof artist.grammy !== 'boolean')
-      throw new BadRequestException(`No required name or grammy`);
-    this.databaseService.artists.push(artist);
-    return artist.info;
+  async create(createArtistDto: CreateArtistDto) {
+    if (!createArtistDto.name || typeof createArtistDto.grammy !== 'boolean') {
+      throw new BadRequestException('No required name or grammy');
+    }
+    return await this.databasePrismaService.artist.create({
+      data: createArtistDto,
+    });
   }
 
-  findAll() {
-    return this.databaseService.artists.map((artist: Artist) => artist.info);
+  async findAll() {
+    return await this.databasePrismaService.artist.findMany();
   }
 
-  findOne(id: string) {
-    const artist = this.databaseService.artists.find(
-      (artist) => artist.id === id,
-    );
+  async findOne(id: string) {
+    const artist = await this.databasePrismaService.artist.findUnique({
+      where: { id },
+    });
     if (!artist) throw new NotFoundException('No such artist in database');
-    return artist.info;
+    return artist;
   }
 
-  update(id: string, updateArtistDto: UpdateArtistDto) {
+  async update(id: string, updateArtistDto: UpdateArtistDto) {
     if (!updateArtistDto.name || typeof updateArtistDto.grammy !== 'boolean')
-      throw new BadRequestException(`No required name or grammy`);
-    const artist = this.databaseService.artists.find(
-      (artist) => artist.id === id,
-    );
+      throw new BadRequestException('No required name or grammy');
+    let artist = await this.databasePrismaService.artist.findUnique({
+      where: { id },
+    });
     if (!artist) throw new NotFoundException('No such artist in database');
-    artist.name = updateArtistDto.name;
-    artist.grammy = updateArtistDto.grammy;
-    return artist.info;
+    artist = await this.databasePrismaService.artist.update({
+      where: { id },
+      data: {
+        name: updateArtistDto.name,
+        grammy: updateArtistDto.grammy,
+      },
+    });
+    return artist;
   }
 
-  remove(id: string) {
-    const artist = this.databaseService.artists.find(
-      (artist) => artist.id === id,
-    );
+  async remove(id: string) {
+    const artist = await this.databasePrismaService.artist.findUnique({
+      where: { id },
+    });
     if (!artist) throw new NotFoundException('No such artist in database');
-    const artistAlbums = this.databaseService.albums.filter(
-      (album) => album.artistId === id,
-    );
-    artistAlbums.forEach((album) => (album.artistId = null));
-    const artistTracks = this.databaseService.tracks.filter(
-      (track) => track.artistId === id,
-    );
-    artistTracks.forEach((track) => (track.artistId = null));
-    this.databaseService.favorites.artists =
-      this.databaseService.favorites.artists.filter(
-        (artistId) => artistId !== id,
-      );
-    this.databaseService.artists = this.databaseService.artists.filter(
-      (artist) => artist.id !== id,
-    );
+    return await this.databasePrismaService.artist.delete({ where: { id } });
   }
 }
